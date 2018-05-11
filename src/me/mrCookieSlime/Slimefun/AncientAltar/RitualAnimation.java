@@ -44,21 +44,20 @@ public class RitualAnimation implements Runnable {
 		this.running = true;
 		this.stage = 0;
 	}
-
+	
 	@Override
 	public void run() {
 		idle();
-		if(this.stage == 36) {
-			finish();
-			return;
+
+		for(int i=0 ; i<8;i++){
+			checkPedestal(pedestals.get(i));
 		}
-		if(this.stage > 0 && this.stage % 4 == 0) {
-			checkPedestal(pedestals.get(this.stage / 4 - 1));
-		}
-		this.stage += 1;
-		SlimefunStartup.instance.getServer().getScheduler().scheduleSyncDelayedTask(SlimefunStartup.instance, this, 8);
+
+		finish();
+		return;
 	}
-	
+
+
 	private void idle() {
 		try {
 			ParticleEffect.SPELL_WITCH.display(l, 1.2F, 0F, 1.2F, 0, 16);
