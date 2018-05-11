@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import me.mrCookieSlime.CSCoreLibPlugin.general.World.CustomSkull;
 import me.mrCookieSlime.Slimefun.SlimefunStartup;
 import me.mrCookieSlime.Slimefun.AncientAltar.AltarRecipe;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
@@ -33,12 +34,14 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
 
 public class SlimefunItem {
 	
 	public static List<SlimefunItem> items = new ArrayList<SlimefunItem>();
 	
 	public static Map<String, URID> map_id = new HashMap<String, URID>();
+	public static Map<String, String> map_texture = new HashMap();
 	public static List<ItemStack> radioactive = new ArrayList<ItemStack>();
 	public static int vanilla = 0;
 	public static Set<String> tickers = new HashSet<String>();
@@ -261,6 +264,11 @@ public class SlimefunItem {
 				items.add(this);
 				if (slimefun) vanilla++;
 				map_id.put(this.id, this.urid);
+
+				if ((getItem().hasItemMeta()) && ((getItem().getItemMeta() instanceof SkullMeta)) && (!map_texture.containsKey(CustomSkull.getTexture(this.item)))) {
+					map_texture.put(CustomSkull.getTexture(this.item), this.id);
+				}
+
 				this.create();
 				for (ItemHandler handler: itemhandlers) {
 					Set<ItemHandler> handlerset = getHandlers(handler.toCodename());
