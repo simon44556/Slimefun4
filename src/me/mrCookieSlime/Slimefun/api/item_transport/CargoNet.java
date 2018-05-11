@@ -200,9 +200,9 @@ public class CargoNet extends Network {
 
 				@Override
 				public void run() {
-					if (BlockStorage.getBlockInfo(b, "visualizer") == null) {
+					/*if (BlockStorage.getBlockInfo(b, "visualizer") == null) {
 						self.display();
-					}
+					}*/
 					//Chest Terminal Code
 					if (EXTRA_CHANNELS) {
 						for (Location bus: imports) {
