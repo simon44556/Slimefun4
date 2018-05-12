@@ -41,7 +41,7 @@ public class SlimefunItem {
 	public static List<SlimefunItem> items = new ArrayList<SlimefunItem>();
 	
 	public static Map<String, URID> map_id = new HashMap<String, URID>();
-	public static Map<String, String> map_texture = new HashMap();
+	public static Map<String, String> map_texture = new HashMap<String, String>();
 	public static List<ItemStack> radioactive = new ArrayList<ItemStack>();
 	public static int vanilla = 0;
 	public static Set<String> tickers = new HashSet<String>();

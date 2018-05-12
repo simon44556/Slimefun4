@@ -44,7 +44,7 @@ public class RitualAnimation implements Runnable {
 		this.running = true;
 		this.stage = 0;
 	}
-	
+
 	@Override
 	public void run() {
 		idle();
