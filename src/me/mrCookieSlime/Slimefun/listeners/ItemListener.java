@@ -3,7 +3,9 @@ package me.mrCookieSlime.Slimefun.listeners;
 
 import java.util.List;
 
+import com.onikur.changebackitem.ChangeBackItem;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Reflection.ReflectionUtils;
+import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.Interfaces.NotPlaceable;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -389,7 +391,61 @@ public class ItemListener implements Listener {
             }
         }
     }
-	
+
+
+
+	@SuppressWarnings("deprecation")
+	@EventHandler(priority=EventPriority.LOWEST, ignoreCancelled = true)
+	public void onInteract(PlayerInteractEvent e) {
+		if (e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+			if (!e.getHand().equals(EquipmentSlot.HAND)) return;
+			Block b = e.getClickedBlock();
+			if(b != null) {
+				if(ChangeBackItem.get().isValidBlockForStoreItem(b)) {
+					if (b.hasMetadata("ChangeBackItem")) {
+						e.setCancelled(true);
+						final ItemStack itemStack = (ItemStack)b.getMetadata("ChangeBackItem").get(0).value();
+						if (itemStack.getType().isBlock() || itemStack.getType() == Material.SKULL_ITEM) {
+							SlimefunItem sfItem = SlimefunItem.getByItem(itemStack);
+							if (sfItem != null && !(sfItem instanceof NotPlaceable)){
+								if(!BlockStorage.hasBlockInfo(b)) {
+									BlockStorage.addBlockInfo(b, "id", sfItem.getID(), true);
+									if (SlimefunItem.blockhandler.containsKey(sfItem.getID())) {
+										SlimefunItem.blockhandler.get(sfItem.getID()).onPlace(e.getPlayer(), b, sfItem);
+									}
+									System.out.println("Slimefun Fix > " + sfItem.getID() + " block fixed for player " + e.getPlayer().getName());
+								}
+							}
+						}
+					}
+				}
+				else if(b.getType() == Material.SKULL) {
+					Skull skull = (Skull) b.getState();
+					if(skull.hasOwner() && skull.getOwner().equalsIgnoreCase("cscorelib")) {
+						String texture = "";
+						try {
+							texture = CustomSkull.getTexture(b);
+						} catch (Exception e1) {
+							e1.printStackTrace();
+						}
+						if(!BlockStorage.hasBlockInfo(b) && SlimefunItem.map_texture.containsKey(texture)) {
+							SlimefunItem sfItem = SlimefunItem.getByID(SlimefunItem.map_texture.get(texture));
+							if (sfItem != null && !(sfItem instanceof NotPlaceable)){
+								BlockStorage.addBlockInfo(b, "id", sfItem.getID(), true);
+								if (SlimefunItem.blockhandler.containsKey(sfItem.getID())) {
+									SlimefunItem.blockhandler.get(sfItem.getID()).onPlace(e.getPlayer(), b, sfItem);
+								}
+								System.out.println("Slimefun Fix > " + sfItem.getID() + " block fixed for player " + e.getPlayer().getName());
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+
 	@EventHandler (ignoreCancelled = true)
     public void onPreBrew(InventoryClickEvent e) {
         Inventory inventory = e.getInventory();
